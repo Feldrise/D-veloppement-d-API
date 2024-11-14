@@ -34,8 +34,9 @@ vet-clinic-api/
 │   │   ├── routes.go    # Routes pour les consultations
 │   │   └── controller.go # Logique de gestion des consultations
 │   └── treatment/       # Fonctionnalité de gestion des traitements
-│       ├── routes.go    # Routes pour les traitements
-│       └── controller.go # Logique de gestion des traitements
+│   |   ├── routes.go    # Routes pour les traitements
+│   |   └── controller.go # Logique de gestion des traitements
+|   └── models/           # Les models JSON de l'application
 └── main.go              # Point d'entrée de l'application
 ```
 
