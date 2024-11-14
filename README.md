@@ -57,3 +57,90 @@ Clonez ce repository pour accéder au contenu du cours, et n'hésitez pas à ouv
 - [Introduction à Go](https://tour.golang.org/)
 
 Nous vous souhaitons un excellent apprentissage du développement d'API avec Go ! 🚀
+
+---
+
+Voici un petit helper magique pour la fonction Update :
+
+```go
+package helper
+
+import (
+	"strings"
+
+	"github.com/mitchellh/mapstructure"
+)
+
+func toCamelCase(input string) string {
+	isToUpper := false
+	var result string
+	for i, v := range input {
+		if i == 0 {
+			result += strings.ToLower(string(v))
+		} else if v == '_' {
+			isToUpper = true
+		} else {
+			if isToUpper {
+				result += strings.ToUpper(string(v))
+				isToUpper = false
+			} else {
+				result += string(v)
+			}
+		}
+	}
+	return result
+}
+
+// ApplyChanges function to decode map into struct
+func ApplyChanges(changes map[string]interface{}, to interface{}) error {
+	camelCaseKeys := make(map[string]interface{})
+	for k, v := range changes {
+		camelCaseKeys[toCamelCase(k)] = v
+	}
+
+	dec, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+		ErrorUnused: true,
+		TagName:     "json",
+		Result:      to,
+		ZeroFields:  true,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return dec.Decode(camelCaseKeys)
+}
+
+func Contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+
+	return false
+}
+```
+
+La fonction s'utilise comme ça :
+
+```go
+var data map[string]interface{}
+
+err := json.NewDecoder(r.Body).Decode(&data)
+if err != nil {
+    render.Render(w, r, errors.ErrInvalidRequest(err))
+    return
+}
+
+company, err := config.CompanyRepository.FindByID(uint(idUint), true)
+
+if err != nil {
+    render.Render(w, r, errors.ErrServerError(err))
+    return
+}
+
+
+helper.ApplyChanges(data, company)
+```
