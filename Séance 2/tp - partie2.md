@@ -79,6 +79,8 @@ Pour cette première étape, nous allons structurer notre code en utilisant `ren
      }
      ```
 
+> Attention, ici vous aurez une erreur ! Elle sera résolu dans la partie juste après
+
 3. **Mise à jour du modèle pour la compatibilité avec `render`**
 
    - Mettez à jour `AgeRequest` pour qu’il implémente l’interface `render.Binder`. Cela vous permet de gérer la validation des données d’entrée.
@@ -108,7 +110,7 @@ Pour cette première étape, nous allons structurer notre code en utilisant `ren
 
 4. **Tester la nouvelle structure**
 
-   - Démarrez votre serveur et testez l’endpoint `age-in-cat-years` en envoyant une requête POST avec un corps JSON pour vérifier que le modèle est bien utilisé.
+   - Démarrez votre serveur et testez l’endpoint `age-in-cat-years` en envoyant une requête POST avec un corps JSON pour vérifier que le modèle est bien utilisé. **Vous devez donc modifier la méthode dans votre routeur 😉**
 
      Exemple de requête avec `curl` :
 
