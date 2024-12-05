@@ -6,11 +6,11 @@
 
 ### Objectifs
 
-Dans ce TP, vous allez apprendre à intégrer une **authentification avec JWT** dans une API REST. Vous mettrez en place une route pour permettre aux utilisateurs de se connecter et de recevoir un **token JWT**, puis vous utiliserez ce token pour sécuriser d’autres routes.
+Dans ce TP, vous allez apprendre à intégrer une **authentification avec JWT** dans une API REST. Vous mettrez en place une route pour permettre aux utilisateurs de se connecter et de recevoir un **token JWT**, puis vous utiliserez ce token pour sécuriser d'autres routes.
 
 Au programme :
 
-1. Création d’un **endpoint de login**.
+1. Création d'un **endpoint de login**.
 2. Génération de **tokens JWT**.
 3. Ajout de protections pour les routes privées. 🚀
 
@@ -46,10 +46,10 @@ Au programme :
 
 ---
 
-### **2. Créez l’Endpoint de Login** 🚪
+### **2. Créez l'Endpoint de Login** 🚪
 
-1. Dans `authentication/controller.go`, implémentez un endpoint `/login` qui permet de vérifier l'email et le mot de passe d’un utilisateur.
-2. Utilisez une base d’utilisateurs simulée :
+1. Dans `authentication/controller.go`, implémentez un endpoint `/login` qui permet de vérifier l'email et le mot de passe d'un utilisateur.
+2. Utilisez une base d'utilisateurs simulée :
 
    ```go
    var users = map[string]string{
@@ -90,7 +90,7 @@ Au programme :
 
 ### **3. Génération des Tokens JWT** 🔑
 
-1. Dans `authentication/jwt.go`, implémentez une fonction pour générer un token JWT contenant des informations sur l’utilisateur :
+1. Dans `authentication/jwt.go`, implémentez une fonction pour générer un token JWT contenant des informations sur l'utilisateur :
 
    ```go
    func GenerateToken(secret, email string) (string, error) {
@@ -106,6 +106,7 @@ Au programme :
 
    ```go
    func ParseToken(secret, tokenString string) (string, error) {
+       tokenString = strings.TrimPrefix(tokenString, "Bearer ")
        token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
            return []byte(secret), nil
        })
@@ -121,7 +122,7 @@ Au programme :
 
 ### **4. Middleware pour Sécuriser les Routes** 🔒
 
-1. Dans `authentication/middleware.go`, implémentez un middleware pour vérifier le JWT et extraire les informations de l’utilisateur :
+1. Dans `authentication/middleware.go`, implémentez un middleware pour vérifier le JWT et extraire les informations de l'utilisateur :
 
    ```go
    func AuthMiddleware(secret string) func(http.Handler) http.Handler {
@@ -146,7 +147,7 @@ Au programme :
    }
    ```
 
-2. Ajoutez une fonction pour extraire l’utilisateur depuis le contexte :
+2. Ajoutez une fonction pour extraire l'utilisateur depuis le contexte :
    ```go
    func GetUserFromContext(ctx context.Context) string {
        email, _ := ctx.Value("email").(string)
@@ -158,7 +159,7 @@ Au programme :
 
 ### **5. Ajoutez une Route Protégée** 🛡️
 
-1. Dans `main.go`, ajoutez une route sécurisée `/protected` qui affiche un message de bienvenue si l’utilisateur est authentifié.
+1. Dans `main.go`, ajoutez une route sécurisée `/protected` qui affiche un message de bienvenue si l'utilisateur est authentifié.
 
    Exemple :
 
