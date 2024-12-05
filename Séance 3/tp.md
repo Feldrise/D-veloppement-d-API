@@ -53,7 +53,7 @@ Au programme :
 
    ```go
    var users = map[string]string{
-       "bob@example.com": " $2a$14$saaZ6k5RPBVZMeEySLOiduHkLXs8BioPolfcA4ysbd591hBW48x2.", // password: "password"
+       "bob@example.com": "$2a$14$saaZ6k5RPBVZMeEySLOiduHkLXs8BioPolfcA4ysbd591hBW48x2.", // password: "password"
    }
    ```
 
