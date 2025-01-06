@@ -1,0 +1,8 @@
+port: 8080
+jwtSecret: HeXXXX
+dataPath: "/mnt/34FA1CF3FA1CB2DA/Users/victo/Documents/Projects/YellowLeafMusic/ylm-api"
+baseURL: "http://localhost:8080"
+applicationURL: "http://localhost:3000"
+
+# Database
+connectionString: "postgres://vet:vet@localhost:5432"

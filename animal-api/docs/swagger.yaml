@@ -1,0 +1,467 @@
+basePath: /api/v1
+definitions:
+  Cat:
+    properties:
+      name:
+        type: string
+    type: object
+  CatCreatePayload:
+    properties:
+      name:
+        type: string
+    type: object
+  LoginPostPayload:
+    properties:
+      email:
+        description: the user's email
+        example: admin@feldrise.com
+        type: string
+      password:
+        description: the user's password
+        example: password
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  RegisterPostPayload:
+    properties:
+      email:
+        description: the user's email
+        example: admin@feldrise.com
+        type: string
+      first_name:
+        description: the user's first name
+        example: Victor
+        type: string
+      last_name:
+        description: the user's last name
+        example: DENIS
+        type: string
+      password:
+        description: the user's password
+        example: password
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  Visit:
+    properties:
+      cat:
+        $ref: '#/definitions/Cat'
+      date:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is the veterinary API
+  title: Veterinary API
+  version: "1.0"
+paths:
+  /authentication/{id}:
+    put:
+      description: Update the current user
+      operationId: update
+      parameters:
+      - description: user's info
+        in: body
+        name: request
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Update the current user
+      tags:
+      - autentication
+  /authentication/check-email:
+    get:
+      description: Check if the email exists
+      operationId: check-if-email-exists
+      parameters:
+      - description: email
+        in: query
+        name: email
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Check if the email exists
+      tags:
+      - autentication
+  /authentication/login:
+    post:
+      description: Login a user
+      operationId: login
+      parameters:
+      - description: user's info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/LoginPostPayload'
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Login a user
+      tags:
+      - autentication
+  /authentication/me:
+    get:
+      description: Get the current user
+      operationId: me
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Get the current user
+      tags:
+      - autentication
+  /authentication/register:
+    post:
+      description: Register a new user
+      operationId: register
+      parameters:
+      - description: user's info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/RegisterPostPayload'
+      responses:
+        "201":
+          description: created
+          schema:
+            type: string
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Register a new user
+      tags:
+      - autentication
+  /cats:
+    get:
+      description: Get all cats
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/Cat'
+            type: array
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Get all cats
+      tags:
+      - cats
+    post:
+      description: Create a cat
+      parameters:
+      - description: Cat data
+        in: body
+        name: cat
+        required: true
+        schema:
+          $ref: '#/definitions/CatCreatePayload'
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/Cat'
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Create a cat
+      tags:
+      - cats
+  /cats/{catid}/visits:
+    get:
+      description: Get all visits for a specific cat
+      parameters:
+      - description: Cat ID
+        in: path
+        name: catid
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/Visit'
+            type: array
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Get all visits
+      tags:
+      - visits
+    post:
+      consumes:
+      - application/json
+      description: Create a visit for a specific cat
+      parameters:
+      - description: Cat ID
+        in: path
+        name: catid
+        required: true
+        type: integer
+      - description: Visit info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/Visit'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/Visit'
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Create a visit
+      tags:
+      - visits
+  /cats/{catid}/visits/{id}:
+    get:
+      description: Get a visit by ID and for a specific cat
+      parameters:
+      - description: Cat ID
+        in: path
+        name: catid
+        required: true
+        type: integer
+      - description: Visit ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/Visit'
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Get a visit
+      tags:
+      - visits
+    put:
+      consumes:
+      - application/json
+      description: Update a visit for a specific cat
+      parameters:
+      - description: Cat ID
+        in: path
+        name: catid
+        required: true
+        type: integer
+      - description: Visit ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Visit info
+        in: body
+        name: request
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/Visit'
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Update a visit
+      tags:
+      - visits
+  /cats/{id}:
+    get:
+      description: Get a cat by its id
+      parameters:
+      - description: Cat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/Cat'
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Get a cat
+      tags:
+      - cats
+    put:
+      description: Update a cat
+      parameters:
+      - description: Cat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Cat data
+        in: body
+        name: cat
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/Cat'
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "401":
+          description: unauthorized
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Update a cat
+      tags:
+      - cats
+swagger: "2.0"
